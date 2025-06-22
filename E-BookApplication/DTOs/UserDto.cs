@@ -3,50 +3,42 @@ using System.ComponentModel.DataAnnotations;
 
 namespace E_BookApplication.DTOs
 {
-	public class UserDto
-	{
-		public string Email { get; set; }
+    public class UserDTO
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string FullName { get; set; }
+        public string Role { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
 
-		public string PasswordHash { get; set; }
+    public class AuthResponseDTO
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string Token { get; set; }
+        public UserDTO User { get; set; }
+    }
 
-		public byte[] Salt { get; set; }
+    public class RegisterDTO
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
-		public string Role { get; set; }
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
 
-		public string FullName { get; set; }
-		public string PhoneNumber { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string FullName { get; set; }
 
-		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        public string Role { get; set; } = "Customer"; 
+    }
 
-		public ICollection<Order> Orders { get; set; }
-		public ICollection<CartItem> CartItems { get; set; }
-		public ICollection<Wishlist> Wishlists { get; set; }
-		public ICollection<ReviewDtos> Reviews { get; set; }
-	}
-
-	public class CreateUserRequestModel
-	{
-		[Required]
-		[StringLength(100)]
-		public string Email { get; set; }
-
-		[Required]
-		public string PasswordHash { get; set; }
-
-		public byte[] Salt { get; set; }
-
-		[Required]
-		[StringLength(50)]
-		public string Role { get; set; }
-
-		[StringLength(100)]
-		public string FullName { get; set; }
-
-		[StringLength(11)]
-		public string PhoneNumber { get; set; }
-	}
-
-	public class UpdateUserRequestModel
+    public class UpdateUserRequestModel
 	{
 		[Required]
 		[StringLength(100)]
@@ -55,8 +47,7 @@ namespace E_BookApplication.DTOs
 		[Required]
 		public string PasswordHash { get; set; }
 
-		public byte[] Salt { get; set; }
-
+		
 		[StringLength(100)]
 		public string FullName { get; set; }
 
@@ -71,22 +62,16 @@ namespace E_BookApplication.DTOs
 		public string Email { get; set; }
 
 		[Required]
-		public string PasswordHash { get; set; }
-
-		public byte[] Salt { get; set; }
+		public string PasswordHash { get; set; }	
 
 	}
 
-	public class SignUpUserRequestModel
-	{
-		[Required]
-		[StringLength(100)]
-		public string Email { get; set; }
+    public class AssignRoleDTO
+    {
+        [Required(ErrorMessage = "User ID is required")]
+        public string UserId { get; set; }
 
-		[Required]
-		public string PasswordHash { get; set; }
-
-		public byte[] Salt { get; set; }
-
-	}
+        [Required(ErrorMessage = "Role is required")]
+        public string Role { get; set; }
+    }
 }

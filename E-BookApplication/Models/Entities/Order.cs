@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using E_BookApplication.Models.Entities.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_BookApplication.Models.Entities
@@ -20,14 +21,24 @@ namespace E_BookApplication.Models.Entities
 
 		[Required]
 		[StringLength(50)]
-		public string Status { get; set; }
+		public OrderStatus Status { get; set; } = OrderStatus.pending;
 
-		[Required]
+        public int? CouponId { get; set; }
+        public Coupon Coupon { get; set; }
+
+        [Required]
 		[StringLength(100)]
 		public string PaymentTransactionId { get; set; }
 
 		public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
 		public ICollection<OrderItem> OrderItems { get; set; }
-	}
+
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal SubTotal { get;  set; }
+        public decimal DiscountAmount { get;  set; }
+        public object ShippingAddress { get;  set; }
+        public DateTime UpdatedAt { get; internal set; }
+    }
 }

@@ -16,12 +16,15 @@
 
 		public DateTime PublicationDate { get; set; }
 
-		public User Vendor { get; set; }
+        public string VendorId { get; set; }
+        public User Vendor { get; set; }
 
 		public ICollection<CartItem> CartItems { get; set; }
 		public ICollection<OrderItem> OrderItems { get; set; }
 		public ICollection<Wishlist> Wishlists { get; set; }
 		public ICollection<Review> Reviews { get; set; }
-	}
+        public DateTime UpdatedAt { get; internal set; }
+        public DateTime CreatedAt { get; internal set; }
+    }
 
 }

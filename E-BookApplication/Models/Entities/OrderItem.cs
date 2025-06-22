@@ -20,5 +20,6 @@ namespace E_BookApplication.Models.Entities
 		[Required]
 		[Column(TypeName = "decimal(18,2)")]
 		public decimal UnitPrice { get; set; }
-	}
+        public decimal TotalPrice { get;  set; }
+    }
 }

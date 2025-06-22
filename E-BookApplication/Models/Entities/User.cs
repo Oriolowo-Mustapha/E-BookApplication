@@ -1,20 +1,21 @@
-﻿namespace E_BookApplication.Models.Entities
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+
+namespace E_BookApplication.Models.Entities
 {
-	public class User : BaseEntity
-	{
-		public string Email { get; set; }
-		public string PasswordHash { get; set; }
+    public class User : IdentityUser
+    {
+        [StringLength(100)]
+        public string FullName { get; set; }
 
-		public byte[] Salt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-		public string Role { get; set; }
-
-		public string FullName { get; set; }
-		public string PhoneNumber { get; set; }
-		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-		public ICollection<Order> Orders { get; set; }
-		public ICollection<CartItem> CartItems { get; set; }
-		public ICollection<Wishlist> Wishlists { get; set; }
-		public ICollection<Review> Reviews { get; set; }
-	}
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+        public ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public bool IsActive { get; internal set; } = false;
+        public DateTime LastLoginAt { get; internal set; }
+    }
 }

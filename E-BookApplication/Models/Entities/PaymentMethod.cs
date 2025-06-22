@@ -6,7 +6,7 @@ namespace E_BookApplication.Models.Entities
 	public class PaymentMethod
 	{
 		[Key]
-		public Guid Id { get; set; } = NewId.Next().ToGuid();
+		public int Id { get; set; }
 
 		[Required]
 		[StringLength(100)]
