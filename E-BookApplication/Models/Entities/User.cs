@@ -15,7 +15,8 @@ namespace E_BookApplication.Models.Entities
         public ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Book> Books { get; set; } = new List<Book>();
-        public bool IsActive { get; internal set; } = false;
-        public DateTime LastLoginAt { get; internal set; }
+        public bool IsActive { get;  set; } = false;
+        public DateTime LastLoginAt { get;  set; }
+        public DateTime FirstLoginDate { get;  set; }
     }
 }

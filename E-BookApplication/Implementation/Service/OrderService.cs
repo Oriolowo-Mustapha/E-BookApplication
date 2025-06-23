@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using E_BookApplication.Contract.Repository;
-using E_BookApplication.Contract.Service;
 using E_BookApplication.DTOs;
+using E_BookApplication.Interface.Repository;
+using E_BookApplication.Interface.Service;
 using E_BookApplication.Models.Entities;
 using E_BookApplication.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 
 
-namespace E_BookApplication.Services
+namespace E_BookApplication.Implementation.Services
 {
 	public class OrderService : IOrderService
 	{

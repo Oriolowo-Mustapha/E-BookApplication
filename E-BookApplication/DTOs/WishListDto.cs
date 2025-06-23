@@ -13,6 +13,6 @@ namespace E_BookApplication.DTOs
     public class AddToWishlistDTO
     {
         [Required]
-        public int BookId { get; set; }
+        public Guid BookId { get; set; }
     }
 }

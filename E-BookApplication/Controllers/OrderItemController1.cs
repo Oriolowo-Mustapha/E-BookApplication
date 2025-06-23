@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using E_BookApplication.Contract.Service;
+using E_BookApplication.Interface.Service;
 using E_BookApplication.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

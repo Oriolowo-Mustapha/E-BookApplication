@@ -1,9 +1,9 @@
-﻿using E_BookApplication.Contract.Repository;
-using E_BookApplication.Data;
+﻿using E_BookApplication.Data;
+using E_BookApplication.Interface.Repository;
 using E_BookApplication.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_BookApplication.Repository
+namespace E_BookApplication.Implementation.Repository
 {
 	public class CouponRepository : GenericRepository<Coupon>, ICouponRepository
 	{

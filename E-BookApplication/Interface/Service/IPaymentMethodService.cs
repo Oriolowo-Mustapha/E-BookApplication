@@ -1,6 +1,6 @@
 ﻿using E_BookApplication.DTOs;
 
-namespace E_BookApplication.Contract.Service
+namespace E_BookApplication.Interface.Service
 {
     public interface IPaymentMethodService
     {

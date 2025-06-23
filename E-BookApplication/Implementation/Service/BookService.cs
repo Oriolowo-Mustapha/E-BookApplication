@@ -1,11 +1,9 @@
-﻿
-using AutoMapper;
-using E_BookApplication.Contract.Repository;
-using E_BookApplication.Contract.Service;
+﻿using AutoMapper;
 using E_BookApplication.DTOs;
+using E_BookApplication.Interface.Repository;
+using E_BookApplication.Interface.Service;
 using E_BookApplication.Models.Entities;
-
-namespace E_BookApplication.Service
+namespace E_BookApplication.Implementation.Service
 {
 	public class BookService : IBookService
 	{
@@ -134,5 +132,4 @@ namespace E_BookApplication.Service
 			return books.Select(b => b.Author).Distinct().Where(a => !string.IsNullOrEmpty(a));
 		}
 	}
-
 }

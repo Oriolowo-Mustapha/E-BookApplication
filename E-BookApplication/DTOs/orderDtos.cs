@@ -24,10 +24,14 @@ namespace E_BookApplication.DTOs
         [Required]
         public int PaymentMethodId { get; set; }
 
+        [Display(Name = "CouponCode")]
         public string CouponCode { get; set; }
 
         [Required]
+        [Display(Name = "PaymentTransactionId")]
         public string PaymentTransactionId { get; set; }
+
+        [Display(Name = "ShippingAddress")]
         public Address ShippingAddress { get; internal set; }
     }
 

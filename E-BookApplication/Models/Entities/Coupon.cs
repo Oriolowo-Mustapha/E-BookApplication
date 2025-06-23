@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using E_BookApplication.Models.Enum;
 
 namespace E_BookApplication.Models.Entities
 {

@@ -1,12 +1,12 @@
 ﻿using E_BookApplication.Models.Entities;
 
-namespace E_BookApplication.Contract.Repository
+namespace E_BookApplication.Interface.Repository
 {
-    public interface IWishlistRepository : IGenericRepository<Wishlist>
-    {
-        Task<IEnumerable<Wishlist>> GetUserWishlistAsync(string userId);
-        Task<Wishlist> GetWishlistItemAsync(string userId, Guid bookId);
-        Task<bool> IsBookInWishlistAsync(string userId, Guid bookId);
-        Task RemoveFromWishlistAsync(string userId, Guid bookId);
-    }
+	public interface IWishlistRepository : IGenericRepository<Wishlist>
+	{
+		Task<IEnumerable<Wishlist>> GetUserWishlistAsync(string userId);
+		Task<Wishlist> GetWishlistItemAsync(string userId, Guid bookId);
+		Task<bool> IsBookInWishlistAsync(string userId, Guid bookId);
+		Task RemoveFromWishlistAsync(string userId, Guid bookId);
+	}
 }

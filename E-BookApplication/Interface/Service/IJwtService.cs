@@ -1,6 +1,6 @@
 ﻿using E_BookApplication.Models.Entities;
 
-namespace E_BookApplication.Contract.Service
+namespace E_BookApplication.Interface.Service
 {
     public interface IJwtService
     {

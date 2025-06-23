@@ -1,11 +1,11 @@
-﻿using E_BookApplication.Contract.Service;
+﻿using E_BookApplication.Interface.Service;
 using E_BookApplication.Models.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace E_BookApplication.Service
+namespace E_BookApplication.Implementation.Service
 {
 	public class JwtService : IJwtService
 	{

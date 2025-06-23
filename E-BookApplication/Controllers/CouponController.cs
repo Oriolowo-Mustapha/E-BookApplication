@@ -1,93 +1,138 @@
-﻿using E_BookApplication.Contract.Service;
-using E_BookApplication.DTOs;
+﻿using E_BookApplication.DTOs;
+using E_BookApplication.Interface.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_BookApplication.Controllers
 {
-    public class CouponController : Controller
-    {
-            private readonly ICouponService _couponService;
+	public class CouponController : Controller
+	{
+		[Authorize]
+		public class CouponsController : Controller
+		{
+			private readonly ICouponService _couponService;
 
-            public CouponController(ICouponService couponService)
-            {
-                _couponService = couponService;
-            }
+			public CouponsController(ICouponService couponService)
+			{
+				_couponService = couponService;
+			}
 
-            [HttpGet]
-            public async Task<IActionResult> Index()
-            {
-                var coupons = await _couponService.GetActiveCouponsAsync();
-                return View(coupons);
-            }
+			[AllowAnonymous]
+			public async Task<IActionResult> Index()
+			{
+				var coupons = await _couponService.GetActiveCouponsAsync();
+				return View(coupons);
+			}
 
-            [HttpGet]
-            public async Task<IActionResult> Details(int id)
-            {
-                var coupon = await _couponService.GetCouponByIdAsync(id);
-                if (coupon == null) return NotFound();
-                return View(coupon);
-            }
+			[Authorize(Roles = "Admin")]
+			public async Task<IActionResult> Details(int id)
+			{
+				var coupon = await _couponService.GetCouponByIdAsync(id);
+				if (coupon == null)
+					return NotFound();
 
-            [HttpGet]
-            public IActionResult Create()
-            {
-                return View();
-            }
+				return View(coupon);
+			}
 
-            [HttpPost]
-            public async Task<IActionResult> Create(CreateCouponDTO model)
-            {
-                if (!ModelState.IsValid) return View(model);
-                await _couponService.CreateCouponAsync(model);
-                return RedirectToAction(nameof(Index));
-            }
+			[Authorize(Roles = "Admin")]
+			public IActionResult Create()
+			{
+				return View();
+			}
 
-            [HttpGet]
-            public async Task<IActionResult> Edit(int id)
-            {
-                var coupon = await _couponService.GetCouponByIdAsync(id);
-                if (coupon == null) return NotFound();
-                var dto = new CreateCouponDTO
-                {
-                    Code = coupon.Code,
-                    Description = coupon.Description,
-                    DiscountAmount = coupon.DiscountAmount,
-                    ExpiryDate = coupon.ExpiryDate,
-                    UsageLimit = coupon.UsageLimit,
-                    IsActive = coupon.IsActive
-                };
-                return View(dto);
-            }
+			[HttpPost]
+			[Authorize(Roles = "Admin")]
+			[ValidateAntiForgeryToken]
+			public async Task<IActionResult> Create(CreateCouponDTO createCouponDto)
+			{
+				if (!ModelState.IsValid)
+					return View(createCouponDto);
 
-            [HttpPost]
-            public async Task<IActionResult> Edit(int id, CreateCouponDTO model)
-            {
-                if (!ModelState.IsValid) return View(model);
-                await _couponService.UpdateCouponAsync(id, model);
-                return RedirectToAction(nameof(Index));
-            }
+				var coupon = await _couponService.CreateCouponAsync(createCouponDto);
+				return RedirectToAction(nameof(Details), new { id = coupon.Id });
+			}
 
-            [HttpPost]
-            public async Task<IActionResult> Delete(int id)
-            {
-                await _couponService.DeleteCouponAsync(id);
-                return RedirectToAction(nameof(Index));
-            }
+			[Authorize(Roles = "Admin")]
+			public async Task<IActionResult> Edit(int id)
+			{
+				var coupon = await _couponService.GetCouponByIdAsync(id);
+				if (coupon == null)
+					return NotFound();
 
-            [HttpPost]
-            public async Task<IActionResult> ApplyCoupon(ApplyCouponDTO model)
-            {
-                var result = await _couponService.ValidateCouponAsync(model);
-                if (!result.IsValid)
-                {
-                    TempData["Error"] = result.Message;
-                    return RedirectToAction("Checkout", "Order");
-                }
+				var updateDto = new CreateCouponDTO
+				{
+					Code = coupon.Code,
+					DiscountAmount = coupon.DiscountAmount,
+					ExpiryDate = coupon.ExpiryDate,
 
-                TempData["Discount"] = result.DiscountAmount;
-                TempData["Message"] = result.Message;
-                return RedirectToAction("Checkout", "Order");
-            }
-     }
+				};
 
- }
+				return View(updateDto);
+			}
+
+			[HttpPost]
+			[Authorize(Roles = "Admin")]
+			[ValidateAntiForgeryToken]
+			public async Task<IActionResult> Edit(int id, CreateCouponDTO updateCouponDto)
+			{
+				if (!ModelState.IsValid)
+					return View(updateCouponDto);
+
+				var result = await _couponService.UpdateCouponAsync(id, updateCouponDto);
+				if (result == null)
+					return NotFound();
+
+				return RedirectToAction(nameof(Details), new { id });
+			}
+
+			[Authorize(Roles = "Admin")]
+			public async Task<IActionResult> Delete(int id)
+			{
+				var coupon = await _couponService.GetCouponByIdAsync(id);
+				if (coupon == null)
+					return NotFound();
+
+				return View(coupon); // Views/Coupons/Delete.cshtml
+			}
+
+			[HttpPost, ActionName("Delete")]
+			[Authorize(Roles = "Admin")]
+			[ValidateAntiForgeryToken]
+			public async Task<IActionResult> DeleteConfirmed(int id)
+			{
+				var result = await _couponService.DeleteCouponAsync(id);
+				if (!result)
+					return NotFound();
+
+				return RedirectToAction(nameof(Index));
+			}
+
+			[HttpGet]
+			public IActionResult Apply()
+			{
+				return View(new ApplyCouponDTO()); // Views/Coupons/Apply.cshtml
+			}
+
+			[HttpPost]
+			[ValidateAntiForgeryToken]
+			public async Task<IActionResult> Apply(ApplyCouponDTO applyCouponDto)
+			{
+				if (!ModelState.IsValid)
+					return View(applyCouponDto);
+
+				var result = await _couponService.ValidateCouponAsync(applyCouponDto);
+				if (!result.IsValid)
+				{
+					ModelState.AddModelError(string.Empty, "Invalid coupon.");
+					return View(applyCouponDto);
+				}
+
+				var discount = await _couponService.CalculateDiscountAsync(applyCouponDto.CouponCode, applyCouponDto.OrderAmount);
+				ViewBag.DiscountAmount = discount;
+
+				return View("Result", new { applyCouponDto.CouponCode, DiscountAmount = discount });
+			}
+		}
+	}
+
+}

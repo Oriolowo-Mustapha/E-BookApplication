@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using E_BookApplication.Contract.Service;
+using E_BookApplication.Interface.Service;
 using E_BookApplication.DTOs;
 using E_BookApplication.Models;
 using Microsoft.AspNetCore.Mvc;

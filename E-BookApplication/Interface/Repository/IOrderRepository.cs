@@ -1,7 +1,8 @@
-﻿using E_BookApplication.Models.Entities;
+﻿using E_BookApplication.Interface.Repository;
+using E_BookApplication.Models.Entities;
 using E_BookApplication.Models.Enum;
 
-namespace E_BookApplication.Contract.Repository
+namespace E_BookApplication.Interface.Repository
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {

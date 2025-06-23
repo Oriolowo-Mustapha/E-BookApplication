@@ -1,6 +1,6 @@
 ﻿using E_BookApplication.DTOs;
 
-namespace E_BookApplication.Contract.Service
+namespace E_BookApplication.Interface.Service
 {
     public interface IAuthService
     {
@@ -11,5 +11,6 @@ namespace E_BookApplication.Contract.Service
         Task<bool> UserExistsAsync(string email);
         Task<bool> AssignRoleAsync(string userId, string role);
         Task<IEnumerable<string>> GetUserRolesAsync(string userId);
+        Task UpdateFirstLoginDateAsync(string userId);
     }
 }

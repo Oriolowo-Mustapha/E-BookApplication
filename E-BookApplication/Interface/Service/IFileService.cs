@@ -1,4 +1,4 @@
-﻿namespace E_BookApplication.Contract.Service
+﻿namespace E_BookApplication.Interface.Service
 {
     public interface IFileService
     {
