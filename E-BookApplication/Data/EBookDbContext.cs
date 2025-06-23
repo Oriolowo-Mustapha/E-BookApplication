@@ -1,4 +1,5 @@
 ﻿using E_BookApplication.Models.Entities;
+using E_BookApplication.Models.Enum;
 using MassTransit;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -133,6 +134,7 @@ namespace E_BookApplication.Data
 			{
 				Id = NewId.Next().ToGuid().ToString(),
 				UserName = "admin",
+				FullName = "Kay__ay",
 				Email = "Admin@gmail.com",
 				PasswordHash = HashPassword("Admin123!"),
 			};
@@ -147,6 +149,7 @@ namespace E_BookApplication.Data
 					BankCode = "TRANSFER",
 					PaymentType = "BankTransfer",
 					Instructions = "Transfer to the provided account details",
+					LogoUrl = "C:\\Users\\ORIOLOWO\\source\\repos\\E-BookApplication.git\\E-BookApplication\\wwwroot\\images\\8043680.png",
 					IsActive = true
 				},
 				new PaymentMethod
@@ -156,6 +159,7 @@ namespace E_BookApplication.Data
 					BankCode = "CARD",
 					PaymentType = "Card",
 					Instructions = "Pay with your debit or credit card",
+					LogoUrl = "C:\\Users\\ORIOLOWO\\source\\repos\\E-BookApplication.git\\E-BookApplication\\wwwroot\\images\\creditcard-img1-indonesia.png",
 					IsActive = true
 				},
 				new PaymentMethod
@@ -165,6 +169,7 @@ namespace E_BookApplication.Data
 					BankCode = "PAYPAL",
 					PaymentType = "PayPal",
 					Instructions = "Pay securely with PayPal",
+					LogoUrl = "C:\\Users\\ORIOLOWO\\source\\repos\\E-BookApplication.git\\E-BookApplication\\wwwroot\\images\\1_Paypal_logo.png",
 					IsActive = true
 				}
 			);
@@ -176,6 +181,22 @@ namespace E_BookApplication.Data
 					Id = 1,
 					Code = "WELCOMEE-B00kKAY",
 					Description = "Welcome discount - 10% off",
+					DiscountType = DiscountType.Percentage.ToString(),
+					DiscountAmount = 10,
+					IsPercentage = true,
+					ExpiryDate = DateTime.UtcNow.AddDays(20),
+					IsActive = true,
+					UsageLimit = 100,
+					UsedCount = 0,
+					CreatedAt = DateTime.UtcNow
+				},
+
+				new Coupon
+				{
+					Id = 2,
+					Code = "WASSUP-B00kKAY",
+					Description = "Buying more than 10 books - 20% off",
+					DiscountType = DiscountType.FixedAmount.ToString(),
 					DiscountAmount = 10,
 					IsPercentage = true,
 					ExpiryDate = DateTime.UtcNow.AddDays(20),
