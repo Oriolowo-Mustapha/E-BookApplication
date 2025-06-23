@@ -7,7 +7,7 @@ namespace E_BookApplication.Repository
 {
     public class PaymentMethodRepository : GenericRepository<PaymentMethod>, IPaymentMethodRepository
     {
-        public PaymentMethodRepository(ApplicationDbContext context) : base(context)
+        public PaymentMethodRepository(EBookDbContext context) : base(context)
         {
         }
 

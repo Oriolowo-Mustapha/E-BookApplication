@@ -7,10 +7,10 @@ namespace E_BookApplication.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly ApplicationDbContext _context;
+        protected readonly EBookDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ApplicationDbContext context)
+        public GenericRepository(EBookDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();

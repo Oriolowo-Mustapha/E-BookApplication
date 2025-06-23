@@ -8,7 +8,7 @@ namespace E_BookApplication.Repository
 {
     public class ReviewRepository : GenericRepository<Review>, IReviewRepository
     {
-        public ReviewRepository(ApplicationDbContext context) : base(context)
+        public ReviewRepository(EBookDbContext context) : base(context)
         {
         }
 

@@ -7,9 +7,9 @@ using System.Text;
 
 namespace E_BookApplication.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<User>
+	public class EBookDbContext : IdentityDbContext<User>
 	{
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+		public EBookDbContext(DbContextOptions<EBookDbContext> options) : base(options)
 		{
 		}
 

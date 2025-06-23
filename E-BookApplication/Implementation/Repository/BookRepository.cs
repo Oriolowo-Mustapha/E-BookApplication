@@ -8,7 +8,7 @@ namespace E_BookApplication.Repository
 {
     public class BookRepository : GenericRepository<Book>, IBookRepository
     {
-        public BookRepository(ApplicationDbContext context) : base(context)
+        public BookRepository(EBookDbContext context) : base(context)
         {
         }
 

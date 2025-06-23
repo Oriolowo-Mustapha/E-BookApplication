@@ -7,10 +7,10 @@ namespace E_BookApplication.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;
+        private readonly EBookDbContext _context;
         private IDbContextTransaction _transaction;
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(EBookDbContext context)
         {
             _context = context;
             Books = new BookRepository(_context);

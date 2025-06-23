@@ -7,7 +7,7 @@ namespace E_BookApplication.Repository
 {
     public class OrderItemRepository : GenericRepository<OrderItem>, IOrderItemRepository
     {
-        public OrderItemRepository(ApplicationDbContext context) : base(context)
+        public OrderItemRepository(EBookDbContext context) : base(context)
         {
         }
 

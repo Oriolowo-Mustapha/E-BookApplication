@@ -7,7 +7,7 @@ namespace E_BookApplication.Repository
 {
     public class CartRepository : GenericRepository<CartItem>, ICartRepository
     {
-        public CartRepository(ApplicationDbContext context) : base(context)
+        public CartRepository(EBookDbContext context) : base(context)
         {
         }
 

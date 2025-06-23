@@ -7,7 +7,7 @@ namespace E_BookApplication.Repository
 {
     public class WishlistRepository : GenericRepository<Wishlist>, IWishlistRepository
     {
-        public WishlistRepository(ApplicationDbContext context) : base(context)
+        public WishlistRepository(EBookDbContext context) : base(context)
         {
         }
 
