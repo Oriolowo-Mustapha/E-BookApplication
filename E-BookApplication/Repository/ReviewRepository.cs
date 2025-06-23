@@ -1,7 +1,7 @@
 ﻿using E_BookApplication.Contract.Repository;
 using E_BookApplication.Data;
 using E_BookApplication.Models.Entities;
-using E_BookApplication.Models.Entities.Enum;
+using E_BookApplication.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_BookApplication.Repository
@@ -20,7 +20,7 @@ namespace E_BookApplication.Repository
                               .ToListAsync();
         }
 
-        public async Task<IEnumerable<Review>> GetUserReviewsAsync(Guid userId)
+        public async Task<IEnumerable<Review>> GetUserReviewsAsync(string userId)
         {
             return await _dbSet.Where(r => r.UserId == userId)
                               .Include(r => r.Book)
@@ -28,12 +28,12 @@ namespace E_BookApplication.Repository
                               .ToListAsync();
         }
 
-        public async Task<Review> GetUserBookReviewAsync(Guid userId, Guid bookId)
+        public async Task<Review> GetUserBookReviewAsync(string userId, Guid bookId)
         {
             return await _dbSet.FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId);
         }
 
-        public async Task<bool> HasUserReviewedBookAsync(Guid userId, Guid bookId)
+        public async Task<bool> HasUserReviewedBookAsync(string userId, Guid bookId)
         {
             return await _dbSet.AnyAsync(r => r.UserId == userId && r.BookId == bookId);
         }
@@ -44,7 +44,7 @@ namespace E_BookApplication.Repository
                               .AverageAsync(r => (double?)r.Rating) ?? 0;
         }
 
-        public async Task<bool> CanUserReviewBookAsync(Guid userId, Guid bookId)
+        public async Task<bool> CanUserReviewBookAsync(string userId, Guid bookId)
         {
           
             var existingReview = await _context.Reviews

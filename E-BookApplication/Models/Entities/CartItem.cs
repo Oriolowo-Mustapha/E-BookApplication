@@ -6,7 +6,7 @@ namespace E_BookApplication.Models.Entities
 	{
 
 		[Required]
-		public Guid UserId { get; set; }
+		public string UserId { get; set; }
 		public User User { get; set; }
 
 		[Required]

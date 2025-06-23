@@ -1,18 +1,18 @@
-﻿using E_BookApplication.Models.Entities.Enum;
+﻿using E_BookApplication.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_BookApplication.Models.Entities
 {
-	public class Order : BaseEntity
+    public class Order : BaseEntity
 	{
 
 		[Required]
-		public Guid UserId { get; set; }
+		public string UserId { get; set; }
 		public User User { get; set; }
 
 		[Required]
-		public Guid PaymentMethodId { get; set; }
+		public int PaymentMethodId { get; set; }
 		public PaymentMethod PaymentMethod { get; set; }
 
 		[Required]
@@ -38,7 +38,7 @@ namespace E_BookApplication.Models.Entities
         [Column(TypeName = "decimal(18,2)")]
         public decimal SubTotal { get;  set; }
         public decimal DiscountAmount { get;  set; }
-        public object ShippingAddress { get;  set; }
+        public Address ShippingAddress { get; set; }
         public DateTime UpdatedAt { get; internal set; }
     }
 }

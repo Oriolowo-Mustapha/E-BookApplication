@@ -3,7 +3,7 @@ using E_BookApplication.Contract.Repository;
 using E_BookApplication.Contract.Service;
 using E_BookApplication.DTOs;
 using E_BookApplication.Models.Entities;
-using E_BookApplication.Models.Entities.Enum;
+using E_BookApplication.Models.Enum;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -14,9 +14,9 @@ namespace EBookStore.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<IdentityUser> userManager)
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper, IEmailService emailService, UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -25,21 +25,19 @@ namespace EBookStore.Services
         }
 
 
-        public async Task<OrderDTO> CreateOrderAsync(Guid userId, CreateOrderDTO createOrderDto)
+
+        public async Task<OrderDTO> CreateOrderAsync(string userId, CreateOrderDTO createOrderDto)
         {
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                // Get cart items
                 var cartItems = await _unitOfWork.Cart.GetUserCartAsync(userId);
                 if (!cartItems.Any())
                     throw new InvalidOperationException("Cart is empty");
 
-                // Calculate totals
                 var subtotal = cartItems.Sum(item => item.Book.Price * item.Quantity);
                 var discount = 0m;
 
-                // Apply coupon if provided
                 if (!string.IsNullOrEmpty(createOrderDto.CouponCode))
                 {
                     var coupon = await _unitOfWork.Coupons.GetByCodeAsync(createOrderDto.CouponCode);
@@ -54,7 +52,6 @@ namespace EBookStore.Services
 
                 var total = subtotal - discount;
 
-                // Create order
                 var order = new Order
                 {
                     UserId = userId,
@@ -73,7 +70,6 @@ namespace EBookStore.Services
                 await _unitOfWork.Orders.AddAsync(order);
                 await _unitOfWork.SaveChangesAsync();
 
-                // Create order items
                 foreach (var cartItem in cartItems)
                 {
                     var orderItem = new OrderItem
@@ -87,7 +83,6 @@ namespace EBookStore.Services
                     await _unitOfWork.OrderItem.AddAsync(orderItem);
                 }
 
-                // Clear cart
                 await _unitOfWork.Cart.ClearUserCartAsync(userId);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -95,8 +90,7 @@ namespace EBookStore.Services
 
                 var orderDto = _mapper.Map<OrderDTO>(order);
 
-
-                var user = await _userManager.FindByIdAsync(userId.ToString());
+                var user = await _userManager.FindByIdAsync(userId);
                 if (user != null)
                 {
                     await _emailService.SendOrderConfirmationEmailAsync(user.Email, orderDto);
@@ -111,7 +105,7 @@ namespace EBookStore.Services
             }
         }
 
-        public async Task<OrderDTO> GetOrderByIdAsync(Guid orderId, Guid userId)
+        public async Task<OrderDTO> GetOrderByIdAsync(Guid orderId, string userId)
         {
             var order = await _unitOfWork.Orders.GetOrderWithDetailsAsync(orderId);
             if (order == null || order.UserId != userId) return null;
@@ -119,7 +113,7 @@ namespace EBookStore.Services
             return _mapper.Map<OrderDTO>(order);
         }
 
-        public async Task<IEnumerable<OrderDTO>> GetUserOrdersAsync(Guid userId)
+        public async Task<IEnumerable<OrderDTO>> GetUserOrdersAsync(string userId)
         {
             var orders = await _unitOfWork.Orders.GetUserOrdersAsync(userId);
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
@@ -142,7 +136,6 @@ namespace EBookStore.Services
             var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
             if (order == null) return null;
 
-            // Fixed: Parse string to enum or accept OrderStatus parameter
             if (Enum.TryParse<OrderStatus>(status, true, out var orderStatus))
             {
                 order.Status = orderStatus;
@@ -157,7 +150,7 @@ namespace EBookStore.Services
             return null; 
         }
 
-        public async Task<bool> CancelOrderAsync(Guid orderId, Guid userId)
+        public async Task<bool> CancelOrderAsync(Guid orderId, string userId)
         {
             var order = await _unitOfWork.Orders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId);
             if (order == null || order.Status != OrderStatus.pending) 

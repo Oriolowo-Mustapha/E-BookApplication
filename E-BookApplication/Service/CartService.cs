@@ -18,13 +18,13 @@
                 _mapper = mapper;
             }
 
-            public async Task<IEnumerable<CartItemDTO>> GetUserCartAsync(Guid userId)
+            public async Task<IEnumerable<CartItemDTO>> GetUserCartAsync(string userId)
             {
                 var cartItems = await _unitOfWork.Cart.GetUserCartAsync(userId);
                 return _mapper.Map<IEnumerable<CartItemDTO>>(cartItems);
             }
 
-            public async Task<CartItemDTO> AddToCartAsync(Guid userId, AddToCartDTO addToCartDto)
+            public async Task<CartItemDTO> AddToCartAsync(string userId, AddToCartDTO addToCartDto)
             {
                 var existingItem = await _unitOfWork.Cart.GetCartItemAsync(userId, addToCartDto.BookId);
 
@@ -50,7 +50,7 @@
                 return _mapper.Map<CartItemDTO>(existingItem);
             }
 
-            public async Task<CartItemDTO> UpdateCartItemAsync(Guid userId, UpdateCartItemDTO updateCartDto)
+            public async Task<CartItemDTO> UpdateCartItemAsync(string userId, UpdateCartItemDTO updateCartDto)
             {
                 var cartItem = await _unitOfWork.Cart.FirstOrDefaultAsync(c => c.Id == updateCartDto.CartItemId && c.UserId == userId);
                 if (cartItem == null) return null;
@@ -62,7 +62,7 @@
                 return _mapper.Map<CartItemDTO>(cartItem);
             }
 
-            public async Task<bool> RemoveFromCartAsync(Guid userId, Guid cartItemId)
+            public async Task<bool> RemoveFromCartAsync(string userId, Guid cartItemId)
             {
                 var cartItem = await _unitOfWork.Cart.FirstOrDefaultAsync(c => c.Id == cartItemId && c.UserId == userId);
                 if (cartItem == null) return false;
@@ -72,19 +72,19 @@
                 return true;
             }
 
-            public async Task<bool> ClearCartAsync(Guid userId)
+            public async Task<bool> ClearCartAsync(string userId)
             {
                 await _unitOfWork.Cart.ClearUserCartAsync(userId);
                 await _unitOfWork.SaveChangesAsync();
                 return true;
             }
 
-            public async Task<decimal> GetCartTotalAsync(Guid userId)
+            public async Task<decimal> GetCartTotalAsync(string userId)
             {
                 return await _unitOfWork.Cart.GetCartTotalAsync(userId);
             }
 
-            public async Task<int> GetCartItemCountAsync(Guid userId)
+            public async Task<int> GetCartItemCountAsync(string userId)
             {
                 return await _unitOfWork.Cart.GetCartItemCountAsync(userId);
             }

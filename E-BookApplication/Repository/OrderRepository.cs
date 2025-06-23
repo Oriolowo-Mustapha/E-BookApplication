@@ -1,7 +1,7 @@
 ﻿using E_BookApplication.Contract.Repository;
 using E_BookApplication.Data;
 using E_BookApplication.Models.Entities;
-using E_BookApplication.Models.Entities.Enum;
+using E_BookApplication.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_BookApplication.Repository
@@ -13,7 +13,7 @@ namespace E_BookApplication.Repository
         }
 
 
-        public async Task<IEnumerable<Order>> GetUserOrdersAsync(Guid userId)
+        public async Task<IEnumerable<Order>> GetUserOrdersAsync(string userId)
         {
             return await _dbSet.Where(o => o.UserId == userId)
                               .Include(o => o.PaymentMethod)

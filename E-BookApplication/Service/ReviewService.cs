@@ -17,14 +17,14 @@ namespace E_BookApplication.Service
             _mapper = mapper;
         }
 
-        public async Task<ReviewDTO> CreateReviewAsync(Guid userId, CreateReviewDTO createReviewDto)
+        public async Task<ReviewDTO> CreateReviewAsync(string userId, CreateReviewDTO createReviewDto)
         {
-           
+            // Check if user has purchased the book
             var canReview = await CanUserReviewBookAsync(userId, createReviewDto.BookId);
             if (!canReview)
                 throw new InvalidOperationException("You can only review books you have purchased");
 
-            
+            // Check if user has already reviewed this book
             var existingReview = await GetUserBookReviewAsync(userId, createReviewDto.BookId);
             if (existingReview != null)
                 throw new InvalidOperationException("You have already reviewed this book");
@@ -44,7 +44,7 @@ namespace E_BookApplication.Service
             return _mapper.Map<ReviewDTO>(review);
         }
 
-        public async Task<ReviewDTO> UpdateReviewAsync(Guid reviewId, CreateReviewDTO updateReviewDto, Guid userId)
+        public async Task<ReviewDTO> UpdateReviewAsync(Guid reviewId, CreateReviewDTO updateReviewDto, string userId)
         {
             var review = await _unitOfWork.Reviews.FirstOrDefaultAsync(r => r.Id == reviewId && r.UserId == userId);
             if (review == null) return null;
@@ -59,7 +59,7 @@ namespace E_BookApplication.Service
             return _mapper.Map<ReviewDTO>(review);
         }
 
-        public async Task<bool> DeleteReviewAsync(Guid reviewId, Guid userId)
+        public async Task<bool> DeleteReviewAsync(Guid reviewId, string userId)
         {
             var review = await _unitOfWork.Reviews.FirstOrDefaultAsync(r => r.Id == reviewId && r.UserId == userId);
             if (review == null) return false;
@@ -75,19 +75,19 @@ namespace E_BookApplication.Service
             return _mapper.Map<IEnumerable<ReviewDTO>>(reviews);
         }
 
-        public async Task<IEnumerable<ReviewDTO>> GetUserReviewsAsync(Guid userId)
+        public async Task<IEnumerable<ReviewDTO>> GetUserReviewsAsync(string userId)
         {
             var reviews = await _unitOfWork.Reviews.GetUserReviewsAsync(userId);
             return _mapper.Map<IEnumerable<ReviewDTO>>(reviews);
         }
 
-        public async Task<ReviewDTO> GetUserBookReviewAsync(Guid userId, Guid bookId)
+        public async Task<ReviewDTO> GetUserBookReviewAsync(string userId, Guid bookId)
         {
             var review = await _unitOfWork.Reviews.GetUserBookReviewAsync(userId, bookId);
             return review != null ? _mapper.Map<ReviewDTO>(review) : null;
         }
 
-        public async Task<bool> CanUserReviewBookAsync(Guid userId, Guid bookId)
+        public async Task<bool> CanUserReviewBookAsync(string userId, Guid bookId)
         {
             return await _unitOfWork.Reviews.CanUserReviewBookAsync(userId, bookId);
         }

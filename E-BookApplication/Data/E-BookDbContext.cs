@@ -1,6 +1,7 @@
 ﻿using E_BookApplication.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace E_BookApplication.Data
 {
@@ -43,6 +44,8 @@ namespace E_BookApplication.Data
                 .WithMany(b => b.CartItems)
                 .HasForeignKey(c => c.BookId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Order>().OwnsOne(o => o.ShippingAddress);
 
 
             builder.Entity<Order>()

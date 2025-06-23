@@ -6,6 +6,9 @@
     using E_BookApplication.DTOs;
     using E_BookApplication.Models.Entities;
     using Org.BouncyCastle.Crypto;
+    using System.Runtime.Intrinsics.Arm;
+    using System.Security.Cryptography;
+    using System.Text;
 
     namespace EBookStore.Services
     {
@@ -45,6 +48,7 @@
                     UserName = registerDto.Email,
                     Email = registerDto.Email,
                     FullName = registerDto.FullName,
+                    PasswordHash = HashPassword(registerDto.Password),
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -110,6 +114,17 @@
                 };
             }
 
+            public static string HashPassword(string password)
+            {
+                var hashpassword = SHA512.HashData(Encoding.UTF8.GetBytes(password));
+
+                StringBuilder builder1 = new();
+                foreach (var c in hashpassword)
+                {
+                    builder1.Append(c.ToString("x2"));
+                }
+                return builder1.ToString();
+            }
             public async Task<UserDTO> GetUserByIdAsync(string userId)
             {
                 var user = await _userManager.FindByIdAsync(userId);

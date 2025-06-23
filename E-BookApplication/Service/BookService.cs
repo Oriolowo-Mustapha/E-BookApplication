@@ -53,7 +53,7 @@
                 return _mapper.Map<IEnumerable<BookDTO>>(books);
             }
 
-            public async Task<IEnumerable<BookDTO>> GetRecommendedBooksAsync(Guid userId, int count = 10)
+            public async Task<IEnumerable<BookDTO>> GetRecommendedBooksAsync(string userId, int count = 10)
             {
                 var books = await _unitOfWork.Books.GetRecommendedBooksAsync(userId, count);
                 return _mapper.Map<IEnumerable<BookDTO>>(books);
@@ -71,6 +71,12 @@
                 book.VendorId = vendorId;
                 book.CreatedAt = DateTime.UtcNow;
 
+                if (bookCreateDto.CoverImagePath != null)
+                {
+                    var imagePath = await _fileService.SaveFileAsync(bookCreateDto.CoverImage, "images/books");
+                    book.CoverImageUrl = imagePath;
+                }
+
                 await _unitOfWork.Books.AddAsync(book);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -85,9 +91,24 @@
                 _mapper.Map(bookUpdateDto, book);
                 book.UpdatedAt = DateTime.UtcNow;
 
+            
+                if (bookUpdateDto.CoverImage != null)
+                {
+                    
+                    if (!string.IsNullOrWhiteSpace(book.CoverImageUrl))
+                    {
+                        var oldImagePath = Path.Combine("wwwroot", book.CoverImageUrl);
+                        if (File.Exists(oldImagePath))
+                            File.Delete(oldImagePath);
+                    }
+
+                    var imagePath = await _fileService.SaveFileAsync(bookUpdateDto.CoverImage, "images/books");
+                    book.CoverImageUrl = imagePath;
+                }
+
                 _unitOfWork.Books.Update(book);
                 await _unitOfWork.SaveChangesAsync();
-                 
+
                 return _mapper.Map<BookDTO>(book);
             }
 
@@ -96,7 +117,7 @@
                 var book = await _unitOfWork.Books.FirstOrDefaultAsync(b => b.Id == bookId && b.VendorId == vendorId);
                 if (book == null) return false;
 
-                //book.IsActive = false;
+             
                 _unitOfWork.Books.Update(book);
                 await _unitOfWork.SaveChangesAsync();
 

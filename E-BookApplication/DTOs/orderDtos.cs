@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using E_BookApplication.Models.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace E_BookApplication.DTOs
 {
@@ -7,6 +8,7 @@ namespace E_BookApplication.DTOs
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Guid PaymentMethodId { get; set; }
+        public string FullName { get; set; }
         public PaymentMethodDTO PaymentMethod { get; set; }
         public int? CouponId { get; set; }
         public CouponDTO Coupon { get; set; }
@@ -20,13 +22,13 @@ namespace E_BookApplication.DTOs
     public class CreateOrderDTO
     {
         [Required]
-        public Guid PaymentMethodId { get; set; }
+        public int PaymentMethodId { get; set; }
 
         public string CouponCode { get; set; }
 
         [Required]
         public string PaymentTransactionId { get; set; }
-        public object ShippingAddress { get; internal set; }
+        public Address ShippingAddress { get; internal set; }
     }
 
     public class OrderItemDTO

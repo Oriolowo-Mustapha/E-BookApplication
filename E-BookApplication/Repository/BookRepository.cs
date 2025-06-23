@@ -91,7 +91,7 @@ namespace E_BookApplication.Repository
                               .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetRecommendedBooksAsync(Guid userId, int count = 10)
+        public async Task<IEnumerable<Book>> GetRecommendedBooksAsync(string userId, int count = 10)
         {
           
             var userGenres = await _context.Orders

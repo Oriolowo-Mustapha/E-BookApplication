@@ -11,7 +11,7 @@ namespace E_BookApplication.Repository
         {
         }
 
-        public async Task<IEnumerable<Wishlist>> GetUserWishlistAsync(Guid userId)
+        public async Task<IEnumerable<Wishlist>> GetUserWishlistAsync(string userId)
         {
             return await _dbSet.Where(w => w.UserId == userId)
                               .Include(w => w.Book)
@@ -22,17 +22,17 @@ namespace E_BookApplication.Repository
                               .ToListAsync();
         }
 
-        public async Task<Wishlist> GetWishlistItemAsync(Guid userId, Guid bookId)
+        public async Task<Wishlist> GetWishlistItemAsync(string userId, Guid bookId)
         {
             return await _dbSet.FirstOrDefaultAsync(w => w.UserId == userId && w.BookId == bookId);
         }
 
-        public async Task<bool> IsBookInWishlistAsync(Guid userId, Guid bookId)
+        public async Task<bool> IsBookInWishlistAsync(string userId, Guid bookId)
         {
             return await _dbSet.AnyAsync(w => w.UserId == userId && w.BookId == bookId);
         }
 
-        public async Task RemoveFromWishlistAsync(Guid userId, Guid bookId)
+        public async Task RemoveFromWishlistAsync(string userId, Guid bookId)
         {
             var wishlistItem = await GetWishlistItemAsync(userId, bookId);
             if (wishlistItem != null)

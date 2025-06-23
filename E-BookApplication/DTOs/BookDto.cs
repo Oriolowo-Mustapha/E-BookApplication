@@ -20,7 +20,19 @@ namespace E_BookApplication.DTOs
         public string VendorName { get; set; }
         public double AverageRating { get; set; }
         public int ReviewCount { get; set; }
+        //public string CoverImagePath { get; set; }
     }
+
+    public class BookDetailsViewModel
+    {
+        public BookDTO Book { get; set; } 
+
+        public IEnumerable<ReviewDTO> Reviews { get; set; } 
+
+        public ReviewDTO UserReview { get; set; } 
+        public double AverageRating { get; set; } 
+    }
+
 
     public class BookCreateDTO
     {
@@ -46,11 +58,12 @@ namespace E_BookApplication.DTOs
         public string Description { get; set; }
 
         [StringLength(500)]
-        public string CoverImageUrl { get; set; }
+        public IFormFile CoverImage { get; set; }
 
         public DateTime PublicationDate { get; set; }
 
-      
+        public string CoverImagePath { get; set; }
+
     }
 
     public class BookUpdateDTO : BookCreateDTO

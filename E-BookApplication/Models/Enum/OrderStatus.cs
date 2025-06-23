@@ -1,4 +1,4 @@
-﻿namespace E_BookApplication.Models.Entities.Enum
+﻿namespace E_BookApplication.Models.Enum
 {
     public enum OrderStatus
     {

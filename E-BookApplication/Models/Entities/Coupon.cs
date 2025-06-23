@@ -34,7 +34,8 @@ namespace E_BookApplication.Models.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
-        public string DiscountType { get; internal set; }
-        public int DiscountValue { get; internal set; }
+        public string DiscountType { get;  set; }
+        public int DiscountValue { get;  set; }
+        public DateTime UpdatedAt { get;  set; }
     }
 }

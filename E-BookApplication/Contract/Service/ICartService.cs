@@ -4,12 +4,12 @@ namespace E_BookApplication.Contract.Service
 {
     public interface ICartService
     {
-        Task<IEnumerable<CartItemDTO>> GetUserCartAsync(Guid userId);
-        Task<CartItemDTO> AddToCartAsync(Guid userId, AddToCartDTO addToCartDto);
-        Task<CartItemDTO> UpdateCartItemAsync(Guid userId, UpdateCartItemDTO updateCartDto);
-        Task<bool> RemoveFromCartAsync(Guid userId, Guid cartItemId);
-        Task<bool> ClearCartAsync(Guid userId);
-        Task<decimal> GetCartTotalAsync(Guid userId);
-        Task<int> GetCartItemCountAsync(Guid userId);
+        Task<IEnumerable<CartItemDTO>> GetUserCartAsync(string userId);
+        Task<CartItemDTO> AddToCartAsync(string userId, AddToCartDTO addToCartDto);
+        Task<CartItemDTO> UpdateCartItemAsync(string userId, UpdateCartItemDTO updateCartDto);
+        Task<bool> RemoveFromCartAsync(string userId, Guid cartItemId);
+        Task<bool> ClearCartAsync(string userId);
+        Task<decimal> GetCartTotalAsync(string userId);
+        Task<int> GetCartItemCountAsync(string userId);
     }
 }

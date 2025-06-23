@@ -11,7 +11,7 @@ namespace E_BookApplication.Repository
         {
         }
 
-        public async Task<IEnumerable<CartItem>> GetUserCartAsync(Guid userId)
+        public async Task<IEnumerable<CartItem>> GetUserCartAsync(string userId)
         {
             return await _dbSet.Where(c => c.UserId == userId)
                               .Include(c => c.Book)
@@ -19,24 +19,24 @@ namespace E_BookApplication.Repository
                               .ToListAsync();
         }
 
-        public async Task<CartItem> GetCartItemAsync(Guid userId, Guid bookId)
+        public async Task<CartItem> GetCartItemAsync(string userId, Guid bookId)
         {
             return await _dbSet.FirstOrDefaultAsync(c => c.UserId == userId && c.BookId == bookId);
         }
 
-        public async Task ClearUserCartAsync(Guid userId)
+        public async Task ClearUserCartAsync(string userId)
         {
             var cartItems = await _dbSet.Where(c => c.UserId == userId).ToListAsync();
             _dbSet.RemoveRange(cartItems);
         }
 
-        public async Task<decimal> GetCartTotalAsync(Guid userId)
+        public async Task<decimal> GetCartTotalAsync(string userId)
         {
             return await _dbSet.Where(c => c.UserId == userId)
                               .SumAsync(c => c.Quantity * c.Book.Price);
         }
 
-        public async Task<int> GetCartItemCountAsync(Guid userId)
+        public async Task<int> GetCartItemCountAsync(string userId)
         {
             return await _dbSet.Where(c => c.UserId == userId)
                               .SumAsync(c => c.Quantity);

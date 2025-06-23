@@ -15,29 +15,22 @@ namespace E_BookApplication.Controllers
             _cartService = cartService;
         }
 
-       
-        private Guid? GetCurrentUserIdAsGuid()
+        // Change this method to return string userId instead of Guid
+        private string? GetCurrentUserId()
         {
-            var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdString))
-                return null;
-
-            if (Guid.TryParse(userIdString, out Guid userId))
-                return userId;
-
-            return null;
+            return User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
-            var cartItems = await _cartService.GetUserCartAsync(userId.Value);
+            var cartItems = await _cartService.GetUserCartAsync(userId);
             return View(cartItems);
         }
 
@@ -50,21 +43,20 @@ namespace E_BookApplication.Controllers
                 return RedirectToAction("Details", "Books", new { id = addToCartDto.BookId });
             }
 
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             try
             {
-                var cartItem = await _cartService.AddToCartAsync(userId.Value, addToCartDto);
+                var cartItem = await _cartService.AddToCartAsync(userId, addToCartDto);
                 TempData["SuccessMessage"] = "Item added to cart successfully!";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed to add item to cart.";
-                
             }
 
             return RedirectToAction(nameof(Index));
@@ -79,15 +71,15 @@ namespace E_BookApplication.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             try
             {
-                var cartItem = await _cartService.UpdateCartItemAsync(userId.Value, updateCartDto);
+                var cartItem = await _cartService.UpdateCartItemAsync(userId, updateCartDto);
                 if (cartItem == null)
                 {
                     TempData["ErrorMessage"] = "Cart item not found.";
@@ -96,10 +88,9 @@ namespace E_BookApplication.Controllers
 
                 TempData["SuccessMessage"] = "Cart item updated successfully!";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed to update cart item.";
-               
             }
 
             return RedirectToAction(nameof(Index));
@@ -108,15 +99,15 @@ namespace E_BookApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(Guid cartItemId)
         {
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             try
             {
-                var result = await _cartService.RemoveFromCartAsync(userId.Value, cartItemId);
+                var result = await _cartService.RemoveFromCartAsync(userId, cartItemId);
                 if (!result)
                 {
                     TempData["ErrorMessage"] = "Cart item not found.";
@@ -125,10 +116,9 @@ namespace E_BookApplication.Controllers
 
                 TempData["SuccessMessage"] = "Item removed from cart successfully!";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed to remove item from cart.";
-               
             }
 
             return RedirectToAction(nameof(Index));
@@ -137,21 +127,20 @@ namespace E_BookApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> ClearCart()
         {
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             try
             {
-                await _cartService.ClearCartAsync(userId.Value);
+                await _cartService.ClearCartAsync(userId);
                 TempData["SuccessMessage"] = "Cart cleared successfully!";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed to clear cart.";
-                
             }
 
             return RedirectToAction(nameof(Index));
@@ -160,16 +149,16 @@ namespace E_BookApplication.Controllers
         [HttpGet]
         public async Task<IActionResult> CartSummary()
         {
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account");
             }
 
             try
             {
-                var cartTotal = await _cartService.GetCartTotalAsync(userId.Value);
-                var cartItems = await _cartService.GetUserCartAsync(userId.Value);
+                var cartTotal = await _cartService.GetCartTotalAsync(userId);
+                var cartItems = await _cartService.GetUserCartAsync(userId);
 
                 var summaryModel = new CartSummaryViewModel
                 {
@@ -179,10 +168,9 @@ namespace E_BookApplication.Controllers
 
                 return View(summaryModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TempData["ErrorMessage"] = "Failed to load cart summary.";
-               
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -190,8 +178,8 @@ namespace E_BookApplication.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateQuantity(Guid cartItemId, int quantity)
         {
-            var userId = GetCurrentUserIdAsGuid();
-            if (!userId.HasValue)
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
             {
                 return Json(new { success = false, message = "User not authenticated" });
             }
@@ -204,16 +192,15 @@ namespace E_BookApplication.Controllers
             try
             {
                 var updateDto = new UpdateCartItemDTO { CartItemId = cartItemId, Quantity = quantity };
-                var cartItem = await _cartService.UpdateCartItemAsync(userId.Value, updateDto);
+                var cartItem = await _cartService.UpdateCartItemAsync(userId, updateDto);
 
                 if (cartItem == null)
                     return Json(new { success = false, message = "Cart item not found" });
 
                 return Json(new { success = true, message = "Quantity updated successfully" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                
                 return Json(new { success = false, message = "Failed to update quantity" });
             }
         }
